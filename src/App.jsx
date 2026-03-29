@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { BadgeDollarSign, Battery, Gift, Layers3, TrendingDown } from "lucide-react";
+import { BadgeDollarSign, Battery, ChevronDown, Gift, Layers3, SlidersHorizontal, TrendingDown } from "lucide-react";
 import "./App.css";
+
+const MOBILE_BREAKPOINT = 720;
 
 const defaults = {
   lang: "zh",
@@ -26,6 +28,8 @@ const copy = {
   zh: {
     title: "电池补贴对比工具",
     settingsTitle: "参数设置",
+    settingsOpen: "展开参数",
+    settingsClose: "收起参数",
     subtitle: "用户视角 · 看装多少 kWh 更划算",
     language: "语言",
     inputDesc:
@@ -71,6 +75,8 @@ const copy = {
   en: {
     title: "Battery Rebate Comparison Tool",
     settingsTitle: "Parameters",
+    settingsOpen: "Open Parameters",
+    settingsClose: "Close Parameters",
     subtitle: "Customer View · Find the most cost-effective kWh setup",
     language: "Language",
     inputDesc:
@@ -437,6 +443,12 @@ function ResultPanel({
 export default function App() {
   const [lang, setLang] = useState(defaults.lang);
   const [activePolicy, setActivePolicy] = useState("old");
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth <= MOBILE_BREAKPOINT : false
+  );
+  const [isControlsOpen, setIsControlsOpen] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth > MOBILE_BREAKPOINT : true
+  );
   const [modulePrice, setModulePrice] = useState(defaults.modulePrice);
   const [paidModules, setPaidModules] = useState(defaults.paidModules);
   const [capacityPerModule, setCapacityPerModule] = useState(defaults.capacityPerModule);
@@ -448,6 +460,19 @@ export default function App() {
   const [getQty, setGetQty] = useState(defaults.getQty);
 
   const t = copy[lang];
+
+  useEffect(() => {
+    const handleResize = () => {
+      const nextIsMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      setIsMobile(nextIsMobile);
+      setIsControlsOpen(nextIsMobile ? false : true);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const oldScenario = useMemo(
     () =>
@@ -596,68 +621,88 @@ export default function App() {
             <div>
               <h1>{t.settingsTitle}</h1>
             </div>
-            <button className="reset-button" onClick={resetDefaults}>
-              {t.reset}
-            </button>
+            <div className="control-panel__actions">
+              <button
+                className={`mobile-controls-toggle ${isControlsOpen ? "is-open" : ""}`}
+                onClick={() => setIsControlsOpen((current) => !current)}
+                aria-expanded={isControlsOpen}
+                aria-controls="parameter-panel"
+                type="button"
+              >
+                <SlidersHorizontal size={16} />
+                <span>{isControlsOpen ? t.settingsClose : t.settingsOpen}</span>
+                <ChevronDown size={16} />
+              </button>
+              <button className="reset-button" onClick={resetDefaults} type="button">
+                {t.reset}
+              </button>
+            </div>
           </div>
 
-          <p className="control-panel__desc">{t.inputDesc}</p>
+          <div
+            id="parameter-panel"
+            className={`control-panel__body ${isMobile && !isControlsOpen ? "is-collapsed" : ""}`}
+          >
+            <div className="control-panel__body-inner">
+              <p className="control-panel__desc">{t.inputDesc}</p>
 
-          <div className="field-grid">
-            <NumberField
-              label={t.paidModules}
-              value={paidModules}
-              suffix={t.modules}
-              onChange={setPaidModules}
-            />
-            <NumberField
-              label={t.modulePrice}
-              value={modulePrice}
-              suffix={t.aud}
-              onChange={setModulePrice}
-            />
-            <NumberField
-              label={t.capacityPerModule}
-              value={capacityPerModule}
-              suffix={t.kwh}
-              onChange={setCapacityPerModule}
-            />
-            <NumberField
-              label={t.stcPrice}
-              value={stcPrice}
-              suffix={t.aud}
-              onChange={setStcPrice}
-            />
-            <NumberField
-              label={t.oldFactor}
-              value={oldFactor}
-              suffix="x"
-              onChange={setOldFactor}
-            />
-            <NumberField
-              label={t.newFactor}
-              value={newFactor}
-              suffix="x"
-              onChange={setNewFactor}
-            />
-            <NumberField
-              label={t.buyQty}
-              value={buyQty}
-              suffix={t.modules}
-              onChange={setBuyQty}
-            />
-            <NumberField
-              label={t.getQty}
-              value={getQty}
-              suffix={t.modules}
-              onChange={setGetQty}
-            />
-            <NumberField
-              label={t.gstRate}
-              value={gstRate}
-              suffix={t.percent}
-              onChange={setGstRate}
-            />
+              <div className="field-grid">
+                <NumberField
+                  label={t.paidModules}
+                  value={paidModules}
+                  suffix={t.modules}
+                  onChange={setPaidModules}
+                />
+                <NumberField
+                  label={t.modulePrice}
+                  value={modulePrice}
+                  suffix={t.aud}
+                  onChange={setModulePrice}
+                />
+                <NumberField
+                  label={t.capacityPerModule}
+                  value={capacityPerModule}
+                  suffix={t.kwh}
+                  onChange={setCapacityPerModule}
+                />
+                <NumberField
+                  label={t.stcPrice}
+                  value={stcPrice}
+                  suffix={t.aud}
+                  onChange={setStcPrice}
+                />
+                <NumberField
+                  label={t.oldFactor}
+                  value={oldFactor}
+                  suffix="x"
+                  onChange={setOldFactor}
+                />
+                <NumberField
+                  label={t.newFactor}
+                  value={newFactor}
+                  suffix="x"
+                  onChange={setNewFactor}
+                />
+                <NumberField
+                  label={t.buyQty}
+                  value={buyQty}
+                  suffix={t.modules}
+                  onChange={setBuyQty}
+                />
+                <NumberField
+                  label={t.getQty}
+                  value={getQty}
+                  suffix={t.modules}
+                  onChange={setGetQty}
+                />
+                <NumberField
+                  label={t.gstRate}
+                  value={gstRate}
+                  suffix={t.percent}
+                  onChange={setGstRate}
+                />
+              </div>
+            </div>
           </div>
         </motion.aside>
 
