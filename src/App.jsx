@@ -139,6 +139,12 @@ function formatNumber(value, digits = 1, lang = "zh") {
   }).format(Number.isFinite(value) ? value : 0);
 }
 
+function parseNumericInput(value) {
+  if (value === "" || value == null) return 0;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function calculateFreeModules(paidModules, buyQty, getQty) {
   if (buyQty <= 0 || getQty <= 0) return 0;
   return Math.floor(paidModules / buyQty) * getQty;
@@ -195,10 +201,15 @@ function NumberField({ label, value, suffix, onChange }) {
       <span className="field__control">
         <input
           className="field__input"
-          type="number"
-          step="any"
+          type="text"
+          inputMode="decimal"
           value={value}
-          onChange={(event) => onChange(Number(event.target.value))}
+          onChange={(event) => {
+            const nextValue = event.target.value;
+            if (/^\d*\.?\d*$/.test(nextValue)) {
+              onChange(nextValue);
+            }
+          }}
         />
         <span className="field__suffix">{suffix}</span>
       </span>
@@ -448,17 +459,27 @@ export default function App() {
   const [isControlsOpen, setIsControlsOpen] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth > MOBILE_BREAKPOINT : true
   );
-  const [modulePrice, setModulePrice] = useState(defaults.modulePrice);
-  const [paidModules, setPaidModules] = useState(defaults.paidModules);
-  const [capacityPerModule, setCapacityPerModule] = useState(defaults.capacityPerModule);
-  const [oldFactor, setOldFactor] = useState(defaults.oldFactor);
-  const [newFactor, setNewFactor] = useState(defaults.newFactor);
-  const [stcPrice, setStcPrice] = useState(defaults.stcPrice);
-  const [gstRate, setGstRate] = useState(defaults.gstRate);
-  const [buyQty, setBuyQty] = useState(defaults.buyQty);
-  const [getQty, setGetQty] = useState(defaults.getQty);
+  const [modulePriceInput, setModulePriceInput] = useState(String(defaults.modulePrice));
+  const [paidModulesInput, setPaidModulesInput] = useState(String(defaults.paidModules));
+  const [capacityPerModuleInput, setCapacityPerModuleInput] = useState(String(defaults.capacityPerModule));
+  const [oldFactorInput, setOldFactorInput] = useState(String(defaults.oldFactor));
+  const [newFactorInput, setNewFactorInput] = useState(String(defaults.newFactor));
+  const [stcPriceInput, setStcPriceInput] = useState(String(defaults.stcPrice));
+  const [gstRateInput, setGstRateInput] = useState(String(defaults.gstRate));
+  const [buyQtyInput, setBuyQtyInput] = useState(String(defaults.buyQty));
+  const [getQtyInput, setGetQtyInput] = useState(String(defaults.getQty));
 
   const t = copy[lang];
+
+  const modulePrice = parseNumericInput(modulePriceInput);
+  const paidModules = parseNumericInput(paidModulesInput);
+  const capacityPerModule = parseNumericInput(capacityPerModuleInput);
+  const oldFactor = parseNumericInput(oldFactorInput);
+  const newFactor = parseNumericInput(newFactorInput);
+  const stcPrice = parseNumericInput(stcPriceInput);
+  const gstRate = parseNumericInput(gstRateInput);
+  const buyQty = parseNumericInput(buyQtyInput);
+  const getQty = parseNumericInput(getQtyInput);
 
   useEffect(() => {
     const handleResize = () => {
@@ -532,15 +553,15 @@ export default function App() {
 
   const resetDefaults = () => {
     setLang(defaults.lang);
-    setModulePrice(defaults.modulePrice);
-    setPaidModules(defaults.paidModules);
-    setCapacityPerModule(defaults.capacityPerModule);
-    setOldFactor(defaults.oldFactor);
-    setNewFactor(defaults.newFactor);
-    setStcPrice(defaults.stcPrice);
-    setGstRate(defaults.gstRate);
-    setBuyQty(defaults.buyQty);
-    setGetQty(defaults.getQty);
+    setModulePriceInput(String(defaults.modulePrice));
+    setPaidModulesInput(String(defaults.paidModules));
+    setCapacityPerModuleInput(String(defaults.capacityPerModule));
+    setOldFactorInput(String(defaults.oldFactor));
+    setNewFactorInput(String(defaults.newFactor));
+    setStcPriceInput(String(defaults.stcPrice));
+    setGstRateInput(String(defaults.gstRate));
+    setBuyQtyInput(String(defaults.buyQty));
+    setGetQtyInput(String(defaults.getQty));
   };
 
   const chartData = useMemo(
@@ -648,57 +669,57 @@ export default function App() {
               <div className="field-grid">
                 <NumberField
                   label={t.paidModules}
-                  value={paidModules}
+                  value={paidModulesInput}
                   suffix={t.modules}
-                  onChange={setPaidModules}
+                  onChange={setPaidModulesInput}
                 />
                 <NumberField
                   label={t.modulePrice}
-                  value={modulePrice}
+                  value={modulePriceInput}
                   suffix={t.aud}
-                  onChange={setModulePrice}
+                  onChange={setModulePriceInput}
                 />
                 <NumberField
                   label={t.capacityPerModule}
-                  value={capacityPerModule}
+                  value={capacityPerModuleInput}
                   suffix={t.kwh}
-                  onChange={setCapacityPerModule}
+                  onChange={setCapacityPerModuleInput}
                 />
                 <NumberField
                   label={t.stcPrice}
-                  value={stcPrice}
+                  value={stcPriceInput}
                   suffix={t.aud}
-                  onChange={setStcPrice}
+                  onChange={setStcPriceInput}
                 />
                 <NumberField
                   label={t.oldFactor}
-                  value={oldFactor}
+                  value={oldFactorInput}
                   suffix="x"
-                  onChange={setOldFactor}
+                  onChange={setOldFactorInput}
                 />
                 <NumberField
                   label={t.newFactor}
-                  value={newFactor}
+                  value={newFactorInput}
                   suffix="x"
-                  onChange={setNewFactor}
+                  onChange={setNewFactorInput}
                 />
                 <NumberField
                   label={t.buyQty}
-                  value={buyQty}
+                  value={buyQtyInput}
                   suffix={t.modules}
-                  onChange={setBuyQty}
+                  onChange={setBuyQtyInput}
                 />
                 <NumberField
                   label={t.getQty}
-                  value={getQty}
+                  value={getQtyInput}
                   suffix={t.modules}
-                  onChange={setGetQty}
+                  onChange={setGetQtyInput}
                 />
                 <NumberField
                   label={t.gstRate}
-                  value={gstRate}
+                  value={gstRateInput}
                   suffix={t.percent}
-                  onChange={setGstRate}
+                  onChange={setGstRateInput}
                 />
               </div>
             </div>
