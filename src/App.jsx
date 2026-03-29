@@ -60,7 +60,7 @@ const copy = {
     formulaSpendNew: "新政策下实际花费 = 付费模块数 × 单块价格；新政策支持买5送1，到手模块数 = 付费模块数 + 赠送模块数。",
     gstIncluded: "GST 税率 included",
     costChartTitle: "每 kWh 实际到手成本",
-    costChartDesc: "横坐标为付费模块数，比较旧政策与新政策下每 kWh 实际到手成本。",
+    costChartDesc: "对比旧政策与新政策下每 kWh 实际到手成本。",
     oldPolicyLine: "旧政策",
     newPolicyLine: "新政策",
     paidModulesAxis: "付费模块数",
@@ -110,7 +110,7 @@ const copy = {
       "Under the new policy, actual spend = paid modules × module price. Buy-5-get-1 applies, so modules received = paid modules + free modules.",
     gstIncluded: "GST included",
     costChartTitle: "Effective Cost per kWh",
-    costChartDesc: "The x-axis shows paid modules, comparing effective cost per kWh under the old and new policy.",
+    costChartDesc: "Compare effective cost per kWh under the old and new policy.",
     oldPolicyLine: "Old Policy",
     newPolicyLine: "New Policy",
     paidModulesAxis: "Paid Modules",
@@ -260,7 +260,6 @@ function CostPerKwhChart({ data, t, lang }) {
       </div>
 
       <div className="chart-frame">
-        <div className="chart-y-title">{t.effectiveCostAxis}</div>
         {tooltip ? (
           <div
             className="chart-tooltip"
