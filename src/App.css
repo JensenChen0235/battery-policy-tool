@@ -47,9 +47,11 @@
 }
 
 .app-header__title {
-  font-size: 1.12rem;
+  font-size: clamp(1.18rem, 1.8vw, 1.7rem);
   font-weight: 700;
   color: var(--text-strong);
+  line-height: 1.12;
+  letter-spacing: -0.05em;
 }
 
 .app-header__subtitle {
@@ -130,12 +132,8 @@
 .result-panel h2 {
   margin: 0;
   color: var(--text-strong);
-  font-size: clamp(1.55rem, 2.4vw, 2.2rem);
-  letter-spacing: -0.05em;
-}
-
-.control-panel h1 {
   font-size: clamp(1.18rem, 1.8vw, 1.7rem);
+  letter-spacing: -0.05em;
   line-height: 1.12;
 }
 
@@ -353,6 +351,8 @@
   color: var(--text-muted);
   font-size: 0.86rem;
   line-height: 1.58;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .result-panel__footer {
@@ -404,7 +404,10 @@
 
 .chart-card__header h3 {
   color: var(--text-strong);
-  font-size: 1rem;
+  font-size: clamp(1.18rem, 1.8vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.05em;
 }
 
 .chart-card__header p {
@@ -448,7 +451,7 @@
 
 .chart-frame {
   position: relative;
-  overflow-x: auto;
+  overflow: hidden;
   border-radius: 24px;
   background: #f7f9fc;
 }
@@ -561,6 +564,13 @@
     padding: 22px;
   }
 
+  .app-header,
+  .control-panel,
+  .result-panel,
+  .chart-card {
+    border-radius: 24px;
+  }
+
   .control-panel__head,
   .result-panel__header {
     flex-direction: column;
@@ -569,6 +579,21 @@
   .control-panel__actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .lang-switch {
+    width: 100%;
+    justify-content: space-between;
+    padding: 5px;
+    gap: 6px;
+  }
+
+  .lang-switch__button {
+    flex: 1;
+    min-height: 46px;
+    padding: 0 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
   }
 
   .mobile-controls-toggle {
@@ -607,18 +632,54 @@
 
   .policy-toggle {
     width: 100%;
+    padding: 5px;
+    gap: 6px;
   }
 
   .policy-toggle__button {
     flex: 1;
+    min-height: 46px;
+    padding: 0 12px;
+    font-size: 0.95rem;
   }
 
   .chart-card {
-    padding: 22px;
+    padding: 18px 16px 20px;
   }
 
   .chart-svg {
-    min-width: 760px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .chart-frame {
+    border-radius: 20px;
+  }
+
+  .chart-y-title {
+    left: 14px;
+    top: 14px;
+    font-size: 0.75rem;
+    max-width: calc(100% - 28px);
+  }
+
+  .chart-axis-label {
+    font-size: 9px;
+  }
+
+  .chart-card__axis-note {
+    font-size: 0.78rem;
+  }
+
+  .summary-item__value {
+    font-size: clamp(1.12rem, 7vw, 1.8rem);
+  }
+
+  .app-header__subtitle,
+  .control-panel__desc,
+  .summary-item__detail,
+  .chart-card__header p {
+    font-size: 0.82rem;
   }
 
 }
