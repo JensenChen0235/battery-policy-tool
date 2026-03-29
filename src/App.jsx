@@ -484,8 +484,13 @@ export default function App() {
   useEffect(() => {
     const handleResize = () => {
       const nextIsMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-      setIsMobile(nextIsMobile);
-      setIsControlsOpen(nextIsMobile ? false : true);
+      setIsMobile((currentIsMobile) => {
+        if (currentIsMobile !== nextIsMobile) {
+          setIsControlsOpen(nextIsMobile ? false : true);
+        }
+
+        return nextIsMobile;
+      });
     };
 
     handleResize();
