@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { BadgeDollarSign, Battery, ChevronDown, Gift, Layers3, SlidersHorizontal, TrendingDown } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
 import "./App.css";
 
 const MOBILE_BREAKPOINT = 720;
@@ -751,6 +752,7 @@ export default function App() {
           <CostPerKwhChart data={chartData} t={t} lang={lang} />
         </section>
       </main>
+      <Analytics />
     </div>
   );
 }
